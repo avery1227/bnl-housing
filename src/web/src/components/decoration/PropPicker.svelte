@@ -12,88 +12,11 @@
 	import { scale } from "svelte/transition";
 	import currency from "../../store/currency";
 
-	const categories = [
-		{
-			name: "Bar",
-			value: "bar",
-		},
-		{
-			name: "Bathroom",
-			value: "bathroom",
-		},
-		{
-			name: "Bins",
-			value: "bins",
-		},
-		{
-			name: "Construction",
-			value: "construction",
-		},
-		{
-			name: "Electrical",
-			value: "electrical",
-		},
-		{
-			name: "Equipment",
-			value: "equipment",
-		},
-		{
-			name: "Garage",
-			value: "garage",
-		},
-		{
-			name: "Industrial",
-			value: "industrial",
-		},
-		{
-			name: "Interior",
-			value: "interior",
-		},
-		{
-			name: "Kitchen",
-			value: "kitchen",
-		},
-		{
-			name: "Minigame",
-			value: "minigame",
-		},
-		{
-			name: "Office",
-			value: "office",
-		},
-		{
-			name: "Outdoor",
-			value: "outdoor",
-		},
-		{
-			name: "Potted",
-			value: "potted",
-		},
-		{
-			name: "Recreational",
-			value: "recreational",
-		},
-		{
-			name: "Rubbish",
-			value: "rubbish",
-		},
-		{
-			name: "Seating",
-			value: "seating",
-		},
-		{
-			name: "Storage",
-			value: "storage",
-		},
-		{
-			name: "Utility",
-			value: "utility",
-		},
-		{
-			name: "Walls and fences",
-			value: "walls",
-		},
-	];
+	let categories: any[] = [];
+
+	fetchNui("getCategories").then((cats) => {
+		categories.push(...cats);
+	});
 
 	let props: Promise<PropType[]>;
 	let category: any;
