@@ -36,9 +36,9 @@
 				entity: entity,
 				position: propPosition,
 				rotation: {
-					x: Utils.radToDeg(propRotation.x),
-					y: Utils.radToDeg(propRotation.y),
-					z: Utils.radToDeg(propRotation.z),
+					x: Utils.radToDeg(propRotation.x).toFixed(3),
+					y: Utils.radToDeg(propRotation.y).toFixed(3),
+					z: Utils.radToDeg(propRotation.z).toFixed(3),
 				},
 			},
 		};
