@@ -86,5 +86,8 @@
 	"specialprops.safe.old_code": "Old safe code",
 	"specialprops.safe.new_code": "New four digit safe code",
 	"specialprops.safe.invalid_code": "Invalid safe code",
-	"specialprops.safe.updated_code": "Updated the safe code to %s"
+	"specialprops.safe.updated_code": "Updated the safe code to %s",
+
+	"categories.storage": "Storage",
+	"categories.interior": "Interior"
 }
