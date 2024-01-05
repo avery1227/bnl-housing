@@ -23,6 +23,8 @@ end, {
 })
 
 RegisterNetEvent("bnl-housing:specialprops:safe:open", function(enteredCode, propertyId, propId)
+	local player = source
+	
     local prop = exports["bnl-housing"]:getPropertyProp(propertyId, propId)
     if not prop then return end
 
@@ -46,7 +48,7 @@ RegisterNetEvent("bnl-housing:specialprops:safe:open", function(enteredCode, pro
     }
 
     exports.ox_inventory:RegisterStash(stashId, locale("specialprops.safe"), 25, 1000 * 1000)
-    exports.ox_inventory:forceOpenInventory(source, 'stash', stashId)
+    exports.ox_inventory:forceOpenInventory(player, 'stash', stashId)
 end)
 
 RegisterNetEvent("bnl-housing:specialprops:safe:changeCode", function(oldCode, _newCode, propertyId, propId)
