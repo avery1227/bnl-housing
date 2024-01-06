@@ -252,13 +252,14 @@ RegisterNUICallback("getProps", function(category, cb)
 end)
 
 RegisterNUICallback("getCategories", function(_, cb)
-	local data = table.map(Data.Props, function(props, category)
-		return {
+	local categories = {}
+	for category, props in pairs(Data.Props) do
+		table.insert(categories, {
 			name = locale("categories." .. category),
 			value = category
-		}
-	end)
-	cb(data)
+		})
+	end
+	cb(json.encode(categories))
 end)
 
 RegisterNUICallback("getLocaleItem", function(item, cb)

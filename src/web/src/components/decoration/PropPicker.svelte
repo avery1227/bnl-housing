@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import PlacedProps from "./PlacedProps.svelte";
 
 	import { useKeyPress } from "../../utils/useKeyPress";
@@ -12,37 +13,63 @@
 	import { scale } from "svelte/transition";
 	import currency from "../../store/currency";
 
-	let categories: any[] = [];
+    let categories = [];
+    let props = [];
+    let category = null;
+    let isVisible = false;
+    let selectedProp = null;
+	
+	// Fetch categories from the server
+    async function fetchCategories() {
+        const cats = await fetchNui("getCategories");
+        if (cats) {
+            categories = JSON.parse(cats);
 
-	fetchNui("getCategories").then((cats) => {
-		categories.push(...cats);
-	});
+            // Set the first category as the selected category
+            if (categories.length > 0) {
+                category = categories[0];
+            }
+        }
+    }
 
-	let props: Promise<PropType[]>;
-	let category: any;
-	let isVisible: boolean;
-	let selectedProp: PropType | null;
+	// Fetch props for the selected category
+    $: if (categories.length > 0 && category) {
+        fetchProps(category.value).then(fetchedProps => {
+            props = fetchedProps || [];
+        });
+    }
 
-	const fetchProps = async (category: string) => {
-		if (isEnvBrowser()) {
-			return new Promise((r) => {
-				r([{ category: "", id: "v_ret_gc_chair03", name: "Chair", price: 70 }]);
-			});
-		}
+    onMount(async () => {
+        await fetchCategories();
+        // After categories are loaded, fetch props for the first category
 
-		if (!category) return;
-		return fetchNui("getProps", category);
-	};
+        if (category) {
+            fetchProps(category.value).then(fetchedProps => {
+                props = fetchedProps || [];
+            });
+        }
+    });
 
-	$: props = fetchProps(category?.value);
+	// Fetch props for the selected category
+    async function fetchProps(category) {
+        if (!category) return []; // Return an empty array if category is not defined
 
-	const selectProp = async (model: string) => {
-		selectedProp = Object.values(await props).find((p) => p.id == model)!;
-	};
+        if (isEnvBrowser()) {
+            return [{ category: "", id: "v_ret_gc_chair03", name: "Chair", price: 70 }];
+        }
 
-	useKeyPress("Escape", () => isVisible && fetchNui("close"));
+        return await fetchNui("getProps", category) || [];
+    }
+
+    async function selectProp(model) {
+        selectedProp = props.find((p) => p.id == model) || null;
+    }
+
+    useKeyPress("Escape", () => isVisible && fetchNui("close"));
+
+	$: cols = categories.length > 0 ? Math.ceil(categories.length / 2) : 1;
 </script>
-
+  
 <Page id="propPicker" bind:isVisible>
 	<div class="side-menu" transition:scale>
 		{#if selectedProp}
@@ -86,7 +113,7 @@
 					items={categories}
 					bind:value={category}
 					placement="bottom"
-					cols={Math.floor(categories.length / 5)}
+					cols={cols}
 				/>
 			</div>
 			<button
